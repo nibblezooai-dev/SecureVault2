@@ -1,0 +1,30 @@
+name: Build SecureVault2
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    - name: Compile SecureVault2
+      shell: cmd
+      run: |
+        cl /MT /O2 /GS /sdl main.cpp bcrypt.lib advapi32.lib user32.lib gdi32.lib comdlg32.lib shell32.lib /Fe:SecureVault2.exe /link /NXCOMPAT /DYNAMICBASE /SUBSYSTEM:WINDOWS
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: SecureVault2-v1.0-beta
+        path: SecureVault2.exe

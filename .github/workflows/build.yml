@@ -5,16 +5,19 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.2.2
 
     - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
+      uses: ilammy/msvc-dev-cmd@v1.13.0
       with:
         arch: x64
 
@@ -24,7 +27,7 @@ jobs:
         cl /MT /O2 /GS /sdl main.cpp bcrypt.lib advapi32.lib user32.lib gdi32.lib comdlg32.lib shell32.lib /Fe:SecureVault2.exe /link /NXCOMPAT /DYNAMICBASE /SUBSYSTEM:WINDOWS
 
     - name: Upload EXE
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: SecureVault2-v1.0-beta
         path: SecureVault2.exe
